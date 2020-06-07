@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.controls {
+  background: #f0f0ff;
+  height: 30px;
+  text-align: left;
+}
+
+.cell {
+  text-align: left;
+  font-size: 11px;
+}

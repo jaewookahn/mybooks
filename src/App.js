@@ -4,9 +4,17 @@ import DataReader from "./DataReader";
 import Papa from "papaparse"
 import ReactDataGrid from 'react-data-grid'
 
+const generalCellFormatter = ({ value }) => {
+  return <div className='cell'>{value}</div>;
+};
+
 const columns = [
-  { key: "a", name: "Column A", editable: true, width: 200, resizable: true },
-  { key: "b", name: "Column B", editable: true, width: 250, resizable: true  },
+  { key: "title", name: "Title", editable: true, width: 200, resizable: true, formatter: generalCellFormatter },
+  { key: "author", name: "Author", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
+  { key: "publisher", name: "Publisher", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
+  { key: "source", name: "Source", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
+  { key: "filename", name: "Filename", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
+
 ];
 
 class App extends React.Component {
@@ -18,15 +26,9 @@ class App extends React.Component {
     super()
 
     var reader = new DataReader('http://localhost:3000')
-    reader.getCSVData('test.csv').then((response) => {
-      var data = Papa.parse(response)
-      var rows = []
-
-      data.data.forEach(r => {
-        rows.push({'a':r[0], 'b':r[1]})
-      })
-
-      this.state.rows = rows
+    reader.getCSVData('list-all-epubs.csv').then((response) => {
+      var data = Papa.parse(response, {header: true})
+      this.state.rows = data.data;
     })
     .catch((e) => {
         console.log('Error', e)
@@ -40,14 +42,20 @@ class App extends React.Component {
         <header className="App-header">
           MyBooks
         </header>
+
+        <div className='controls'>
+          Search
+        </div>
   
         <ReactDataGrid
             columns={columns}
             rowGetter={i => this.state.rows[i] }
-            rowsCount={20}
+            rowsCount={3000}
             onGridRowsUpdated={this.onGridRowsUpdated}
             enableCellSelect={true}
+            minHeight={1000}
         />
+  
       </div>
     );  
   }
