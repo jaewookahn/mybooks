@@ -8,14 +8,33 @@ const generalCellFormatter = ({ value }) => {
   return <div className='cell'>{value}</div>;
 };
 
-const columns = [
-  { key: "title", name: "Title", editable: true, width: 200, resizable: true, formatter: generalCellFormatter },
-  { key: "author", name: "Author", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
-  { key: "publisher", name: "Publisher", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
-  { key: "source", name: "Source", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
-  { key: "filename", name: "Filename", editable: true, width: 250, resizable: true, formatter: generalCellFormatter   },
+const sortRows = ( sortColumn, sortDirection, rows) => {  
+  console.log("Sorting", sortColumn, sortDirection)
+  const comparer = (a, b) => {
+    if (sortDirection === "ASC") {
+      return a[sortColumn] > b[sortColumn] ? 1 : -1;
+    } else if (sortDirection === "DESC") {
+      return a[sortColumn] < b[sortColumn] ? 1 : -1;
+    }
+  };
+  console.log([...rows].sort(comparer))
+  return  [...rows].sort(comparer);
+};
 
-];
+const defaultColumnProperties = {
+  sortable: true,
+  width: 250
+};
+
+const columns = [
+  { key: "title", name: "Title", editable: true, resizable: true, formatter: generalCellFormatter },
+  { key: "author", name: "Author", editable: true, resizable: true, formatter: generalCellFormatter },
+  { key: "publisher", name: "Publisher", editable: true, resizable: true, formatter: generalCellFormatter   },
+  { key: "source", name: "Source", editable: true, resizable: true, formatter: generalCellFormatter   },
+  { key: "filename", name: "Filename", editable: true, resizable: true, formatter: generalCellFormatter   },
+
+].map(c => ({ ...c, ...defaultColumnProperties }));
+
 
 class App extends React.Component {
 
@@ -54,6 +73,9 @@ class App extends React.Component {
             onGridRowsUpdated={this.onGridRowsUpdated}
             enableCellSelect={true}
             minHeight={1000}
+            onGridSort={(sortColumn, sortDirection) => 
+              this.state.rows = sortRows( sortColumn, sortDirection, this.state.rows)
+            }
         />
   
       </div>
