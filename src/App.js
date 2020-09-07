@@ -8,7 +8,7 @@ const generalCellFormatter = ({ value }) => {
   return <div className='cell'>{value}</div>;
 };
 
-const sortRows = ( sortColumn, sortDirection, rows) => {  
+const sortRows = (sortColumn, sortDirection, rows, initial_rows) => {  
   console.log("Sorting", sortColumn, sortDirection)
   const comparer = (a, b) => {
     if (sortDirection === "ASC") {
@@ -18,7 +18,7 @@ const sortRows = ( sortColumn, sortDirection, rows) => {
     }
   };
   console.log([...rows].sort(comparer))
-  return  [...rows].sort(comparer);
+  return sortDirection === "NONE" ? initial_rows : [...rows].sort(comparer);
 };
 
 const defaultColumnProperties = {
@@ -48,6 +48,7 @@ class App extends React.Component {
     reader.getCSVData('list-all-epubs.csv').then((response) => {
       var data = Papa.parse(response, {header: true})
       this.state.rows = data.data;
+      this.initial_rows = data.data;
     })
     .catch((e) => {
         console.log('Error', e)
@@ -74,7 +75,9 @@ class App extends React.Component {
             enableCellSelect={true}
             minHeight={1000}
             onGridSort={(sortColumn, sortDirection) => 
-              this.state.rows = sortRows( sortColumn, sortDirection, this.state.rows)
+              this.setState({
+                  rows: sortRows(sortColumn, sortDirection, this.state.rows, this.initial_rows)
+                })
             }
         />
   
