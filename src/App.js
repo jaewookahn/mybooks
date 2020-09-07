@@ -9,7 +9,6 @@ const generalCellFormatter = ({ value }) => {
 };
 
 const sortRows = (sortColumn, sortDirection, rows, initial_rows) => {  
-  console.log("Sorting", sortColumn, sortDirection)
   const comparer = (a, b) => {
     if (sortDirection === "ASC") {
       return a[sortColumn] > b[sortColumn] ? 1 : -1;
@@ -23,16 +22,18 @@ const sortRows = (sortColumn, sortDirection, rows, initial_rows) => {
 
 const defaultColumnProperties = {
   sortable: true,
-  width: 250
+  width: 250,
+  editable: true,
+  resizable: true,
+  formatter: generalCellFormatter
 };
 
 const columns = [
-  { key: "title", name: "Title", editable: true, resizable: true, formatter: generalCellFormatter },
-  { key: "author", name: "Author", editable: true, resizable: true, formatter: generalCellFormatter },
-  { key: "publisher", name: "Publisher", editable: true, resizable: true, formatter: generalCellFormatter   },
-  { key: "source", name: "Source", editable: true, resizable: true, formatter: generalCellFormatter   },
-  { key: "filename", name: "Filename", editable: true, resizable: true, formatter: generalCellFormatter   },
-
+  { key: "title", name: "Title" },
+  { key: "author", name: "Author"},
+  { key: "publisher", name: "Publisher"},
+  { key: "source", name: "Source"},
+  { key: "filename", name: "Filename"},
 ].map(c => ({ ...c, ...defaultColumnProperties }));
 
 
